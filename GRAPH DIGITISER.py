@@ -61,9 +61,20 @@ class GraphDigitizerApp:
         self.canvas.bind("<MouseWheel>", self.on_zoom)
         
     def display_image(self):
+        self.canvas.delete("all")  # Clear the canvas
+        canvas_width = self.canvas.winfo_width()
+        canvas_height = self.canvas.winfo_height()
+        image_ratio = self.image.width / self.image.height
+        canvas_ratio = canvas_width / canvas_height
+        
+        if image_ratio > canvas_ratio:
+            self.zoom_factor = canvas_width / self.image.width
+        else:
+            self.zoom_factor = canvas_height / self.image.height
+        
         resized_image = self.image.resize((int(self.image.width * self.zoom_factor), int(self.image.height * self.zoom_factor)))
         self.tk_image = ImageTk.PhotoImage(resized_image)
-        self.canvas.create_image(400, 300, image=self.tk_image)
+        self.canvas.create_image(canvas_width // 2, canvas_height // 2, image=self.tk_image)
     
     def scale_point(self, x, y):
         x_scaled = self.x_max * (x - self.origin[0]) / (self.x_axis[0] - self.origin[0])
