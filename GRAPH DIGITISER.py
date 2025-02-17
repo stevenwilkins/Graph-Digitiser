@@ -17,6 +17,8 @@ class GraphDigitizerApp:
         self.zoom_factor = 1.0
         self.points = []
         self.origin = None
+        self.origin_x_value = None
+        self.origin_y_value = None
         self.x_axis = None
         self.y_axis = None
         self.x_max = None
@@ -38,6 +40,8 @@ class GraphDigitizerApp:
         
     def get_origin(self, event):
         self.origin = (event.x, event.y)
+        self.origin_x_value = float(simpledialog.askstring("Origin", "Enter the X value for the origin:"))
+        self.origin_y_value = float(simpledialog.askstring("Origin", "Enter the Y value for the origin:"))
         self.canvas.create_oval(event.x-2, event.y-2, event.x+2, event.y+2, fill='green')
         
         messagebox.showinfo("Step 3", "Click on the extreme point of the X-axis")
@@ -77,8 +81,8 @@ class GraphDigitizerApp:
         self.canvas.create_image(canvas_width // 2, canvas_height // 2, image=self.tk_image)
     
     def scale_point(self, x, y):
-        x_scaled = self.x_max * (x - self.origin[0]) / (self.x_axis[0] - self.origin[0])
-        y_scaled = self.y_max * (self.origin[1] - y) / (self.origin[1] - self.y_axis[1])
+        x_scaled = self.origin_x_value + self.x_max * (x - self.origin[0]) / (self.x_axis[0] - self.origin[0])
+        y_scaled = self.origin_y_value + self.y_max * (self.origin[1] - y) / (self.origin[1] - self.y_axis[1])
         return x_scaled, y_scaled
     
     def on_click(self, event):
